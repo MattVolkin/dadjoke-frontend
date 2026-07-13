@@ -48,6 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('search-input');
   const searchResults = document.getElementById('search-results');
   const searchSection = document.getElementById('search-section');
+  const jokeSection = document.getElementById('joke-section');
   const showMoreBtn = document.getElementById('show-more-btn');
   const clearSearchBtn = document.getElementById('clear-search-btn');
   const hamburgerMenu = document.getElementById('hamburger-menu');
@@ -171,6 +172,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   clearSearchBtn.addEventListener('click', () => {
     searchSection.style.display = 'none';
+    // Restore the focused-away Random Joke section.
+    jokeSection.style.display = '';
     searchResults.innerHTML = '';
     searchInput.value = '';
     searchResultsData = [];
@@ -206,6 +209,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     searchResults.innerHTML = 'Searching...';
     searchSection.style.display = 'block';
+    // Focused search view: hide the Random Joke section until the search is cleared.
+    jokeSection.style.display = 'none';
 
     try {
       const response = await fetch(`${API_BASE_URL}/search?term=${encodeURIComponent(term)}`);
