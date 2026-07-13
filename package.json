@@ -1,0 +1,18 @@
+{
+  "name": "jokegen-frontend",
+  "version": "1.0.0",
+  "description": "Static frontend for Dad Joke Player - browse, search, play, and favorite dad jokes.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "globals": "^15.13.0",
+    "prettier": "^3.4.2"
+  }
+}

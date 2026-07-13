@@ -20,6 +20,7 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 - `index.html` - App shell and UI layout.
 - `style.css` - Visual design, responsive rules, and sidebar styles.
 - `app.js` - API calls, rendering logic, search, and favorites handling.
+- `favicon.svg` - Site favicon.
 - `CNAME` - Custom domain configuration for GitHub Pages.
 
 ## How It Works
@@ -49,6 +50,25 @@ Example backend URLs used by the app:
 ## Configuration
 
 If you want to point the frontend at a different backend, update `API_BASE_URL` in `app.js`.
+
+## Development
+
+The app ships as plain HTML/CSS/JS with no build step. Prettier and ESLint are
+included only as a lightweight quality gate.
+
+1. Install the dev tooling:
+   ```bash
+   npm install
+   ```
+2. Format all files:
+   ```bash
+   npm run format
+   ```
+   Or check formatting without writing changes with `npm run format:check`.
+3. Lint the JavaScript:
+   ```bash
+   npm run lint
+   ```
 
 ## Notes
 

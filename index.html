@@ -1,58 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dad Joke Player</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <div class="header-content">
-      <button id="hamburger-menu" aria-label="Show favorites" class="hamburger">
-        &#9776;
-      </button>
-      <h1 class="site-title">Dad Joke Player</h1>
-      <form id="search-form">
-        <input type="text" id="search-input" placeholder="Search jokes..." />
-        <button type="submit">Search</button>
-      </form>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dad Joke Player</title>
+    <meta
+      name="description"
+      content="Dad Joke Player - fetch random dad jokes, search by keyword, play audio, and save your favorites, right in the browser."
+    />
 
-  <!-- Favorites Sidebar -->
-  <aside id="favorites-sidebar">
-    <div class="sidebar-header">
-      <span>Favorites</span>
-      <button id="close-sidebar" aria-label="Close favorites">&times;</button>
-    </div>
-    <div id="favorites-sidebar-list"></div>
-  </aside>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-  <main>
-    <!-- Search Section -->
-    <section id="search-section">
-      <div class="search-section-header">
-        <h2>Search</h2>
-        <button id="clear-search-btn">Clear Search</button>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Dad Joke Player" />
+    <meta
+      property="og:description"
+      content="Fetch random dad jokes, search by keyword, play audio, and save your favorites."
+    />
+    <meta property="og:url" content="https://www.nachoaveragedadjoke.com/" />
+    <meta property="og:image" content="https://www.nachoaveragedadjoke.com/favicon.svg" />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <button
+          id="hamburger-menu"
+          class="hamburger"
+          aria-label="Show favorites"
+          aria-controls="favorites-sidebar"
+          aria-expanded="false"
+        >
+          &#9776;
+        </button>
+        <h1 class="site-title">Dad Joke Player</h1>
+        <form id="search-form">
+          <input type="text" id="search-input" placeholder="Search jokes..." />
+          <button type="submit">Search</button>
+        </form>
       </div>
-      <div id="search-results"></div>
-      <button id="show-more-btn">Show More Results</button>
-    </section>
+    </header>
 
-    <!-- Random Joke Section -->
-    <section id="joke-section">
-      <h2>Random Joke</h2>
-      <div id="joke-display" class="joke-box">Generated Joke Text</div>
-      <button id="random-joke-btn">Get Random Joke</button>
-    </section>
+    <!-- Favorites Sidebar -->
+    <aside id="favorites-sidebar" aria-label="Favorites">
+      <div class="sidebar-header">
+        <span>Favorites</span>
+        <button id="close-sidebar" aria-label="Close favorites">&times;</button>
+      </div>
+      <div id="favorites-sidebar-list"></div>
+    </aside>
 
-  </main>
+    <main>
+      <!-- Search Section -->
+      <section id="search-section">
+        <div class="search-section-header">
+          <h2>Search</h2>
+          <button id="clear-search-btn">Clear Search</button>
+        </div>
+        <div id="search-results"></div>
+        <button id="show-more-btn">Show More Results</button>
+      </section>
 
-  <footer>
+      <!-- Random Joke Section -->
+      <section id="joke-section">
+        <h2>Random Joke</h2>
+        <div id="joke-display" class="joke-box">
+          <p class="joke-placeholder">Press &ldquo;Get Random Joke&rdquo; to start.</p>
+        </div>
+        <button id="random-joke-btn">Get Random Joke</button>
+      </section>
+    </main>
 
-  </footer>
+    <footer>
+      <p>
+        Built for laughs &middot;
+        <a href="https://www.nachoaveragedadjoke.com/">nachoaveragedadjoke.com</a>
+      </p>
+    </footer>
 
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>

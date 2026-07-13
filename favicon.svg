@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dad Joke Player">
+  <circle cx="32" cy="32" r="30" fill="#FFC857" stroke="#222" stroke-width="3" />
+  <circle cx="23" cy="26" r="4" fill="#222" />
+  <circle cx="41" cy="26" r="4" fill="#222" />
+  <path d="M20 40 Q32 52 44 40" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round" />
+</svg>
