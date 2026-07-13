@@ -60,25 +60,40 @@ window.addEventListener('DOMContentLoaded', () => {
   let visibleCount = 0;
   const RESULTS_PER_BATCH = 5;
 
-  // The favorited state is driven entirely by the `.favorited` CSS class.
+  // localStorage is the single source of truth for favorites; every heart in
+  // the DOM derives its state from it. A joke can be shown in several places at
+  // once (main display, search results, sidebar), so toggling one heart must
+  // re-sync all hearts that share the same joke key.
+  function applyFavoritedState(heart, favorited) {
+    heart.classList.toggle('favorited', favorited);
+    heart.setAttribute('aria-pressed', String(favorited));
+  }
+
+  function syncHeartsForKey(key) {
+    const favorited = getFavorites().some((fav) => jokeKey(fav) === key);
+    document.querySelectorAll('.joke-heart').forEach((heart) => {
+      if (heart.dataset.jokeKey === key) {
+        applyFavoritedState(heart, favorited);
+      }
+    });
+  }
+
   // A real <button> is focusable and activatable by keyboard (Enter/Space)
   // out of the box, so no manual tabindex/keydown handling is needed.
   function createHeart(joke) {
+    const key = jokeKey(joke);
     const heart = document.createElement('button');
     heart.type = 'button';
     heart.textContent = '♥';
     heart.className = 'joke-heart';
+    heart.dataset.jokeKey = key;
     heart.setAttribute('aria-label', 'Toggle favorite');
-    const favorited = isJokeFavorited(joke);
-    heart.classList.toggle('favorited', favorited);
-    heart.setAttribute('aria-pressed', String(favorited));
+    applyFavoritedState(heart, isJokeFavorited(joke));
     heart.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleFavorite(joke);
       updateFavoritesUI();
-      const isFav = isJokeFavorited(joke);
-      heart.classList.toggle('favorited', isFav);
-      heart.setAttribute('aria-pressed', String(isFav));
+      syncHeartsForKey(key);
     });
     return heart;
   }
