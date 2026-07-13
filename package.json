@@ -7,12 +7,14 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node --test"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
     "eslint": "^9.16.0",
     "globals": "^15.13.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.4.2"
   }
 }

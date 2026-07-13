@@ -23,4 +23,14 @@ export default [
       sourceType: 'module',
     },
   },
+  {
+    // Tests run in Node with the built-in test runner (node --test) + jsdom.
+    files: ['test/**/*.js', '**/*.test.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
 ];

@@ -1,45 +1,8 @@
 const API_BASE_URL = 'https://jokegen-backend.onrender.com';
 
-const FAVORITES_KEY = 'favorites';
-
-// Stable identity for a joke: prefer the backend id, fall back to text.
-function jokeKey(joke) {
-  return joke.id != null ? `id:${joke.id}` : `text:${joke.joke_text}`;
-}
-
-function getFavorites() {
-  try {
-    return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
-  } catch {
-    return [];
-  }
-}
-
-function setFavorites(favorites) {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-}
-
-function isJokeFavorited(joke) {
-  const key = jokeKey(joke);
-  return getFavorites().some((fav) => jokeKey(fav) === key);
-}
-
-function toggleFavorite(joke) {
-  const key = jokeKey(joke);
-  let favorites = getFavorites();
-  if (favorites.some((fav) => jokeKey(fav) === key)) {
-    favorites = favorites.filter((fav) => jokeKey(fav) !== key);
-  } else {
-    favorites.push(joke);
-  }
-  setFavorites(favorites);
-}
-
-function escapeHtml(text) {
-  const el = document.createElement('div');
-  el.textContent = text;
-  return el.innerHTML;
-}
+// Joke/favorites logic lives in favorites.js (loaded as a classic script
+// before this one) so it can be unit-tested in isolation.
+const { jokeKey, getFavorites, isJokeFavorited, toggleFavorite, escapeHtml } = window.Favorites;
 
 window.addEventListener('DOMContentLoaded', () => {
   const jokeDisplay = document.getElementById('joke-display');
