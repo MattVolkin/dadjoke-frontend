@@ -284,11 +284,18 @@ button:hover,
 }
 
 /* Heart state is driven entirely by the `.favorited` class. */
+/* The heart is a real <button>; strip the default button chrome so it looks
+   like plain text while remaining focusable and keyboard-operable. */
 .joke-heart {
   cursor: pointer;
   font-size: 1.5rem;
   margin-left: 1rem;
   color: var(--black);
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  font-family: inherit;
 }
 
 .joke-heart.favorited {

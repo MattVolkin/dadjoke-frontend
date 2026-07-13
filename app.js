@@ -61,18 +61,24 @@ window.addEventListener('DOMContentLoaded', () => {
   const RESULTS_PER_BATCH = 5;
 
   // The favorited state is driven entirely by the `.favorited` CSS class.
+  // A real <button> is focusable and activatable by keyboard (Enter/Space)
+  // out of the box, so no manual tabindex/keydown handling is needed.
   function createHeart(joke) {
-    const heart = document.createElement('span');
+    const heart = document.createElement('button');
+    heart.type = 'button';
     heart.textContent = '♥';
     heart.className = 'joke-heart';
-    heart.setAttribute('role', 'button');
     heart.setAttribute('aria-label', 'Toggle favorite');
-    heart.classList.toggle('favorited', isJokeFavorited(joke));
+    const favorited = isJokeFavorited(joke);
+    heart.classList.toggle('favorited', favorited);
+    heart.setAttribute('aria-pressed', String(favorited));
     heart.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleFavorite(joke);
       updateFavoritesUI();
-      heart.classList.toggle('favorited', isJokeFavorited(joke));
+      const isFav = isJokeFavorited(joke);
+      heart.classList.toggle('favorited', isFav);
+      heart.setAttribute('aria-pressed', String(isFav));
     });
     return heart;
   }
