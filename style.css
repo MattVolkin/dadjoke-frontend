@@ -56,10 +56,9 @@ header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 1.2rem 2rem;
+  padding: 1.2rem 2.5rem;
   gap: 1rem;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -305,13 +304,16 @@ button:hover,
 #favorites-sidebar {
   position: fixed;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: 0;
+  width: 340px;
+  max-width: 90%;
   height: 100vh;
   background: var(--white);
   box-shadow: 4px 0 20px var(--shadow-dark);
   z-index: 1000;
-  transition: left 0.3s ease;
+  /* Offset past the box-shadow so no sliver shows while closed. */
+  transform: translateX(calc(-100% - 24px));
+  transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
   color: var(--black);
@@ -321,7 +323,7 @@ button:hover,
 }
 
 #favorites-sidebar.open {
-  left: 0;
+  transform: translateX(0);
 }
 
 .sidebar-header {
@@ -426,14 +428,7 @@ footer a {
     margin-top: 0.3rem;
   }
 
-  #favorites-sidebar {
-    border-radius: 0;
-    border-right: none;
-    border-bottom: 4px solid var(--gold);
-  }
-
   .sidebar-header {
-    border-radius: 0;
     font-size: 1.6rem;
   }
 }
