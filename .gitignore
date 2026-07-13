@@ -1,3 +1,6 @@
+# Node tooling (Prettier / ESLint)
+node_modules/
+
 # Audio assets are served by the backend API
 Joke audio/
 
