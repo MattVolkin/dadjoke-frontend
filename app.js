@@ -1,7 +1,6 @@
-const API_BASE_URL = 'https://jokegen-backend.onrender.com';
-
-// Joke/favorites logic lives in favorites.js (loaded as a classic script
-// before this one) so it can be unit-tested in isolation.
+// Config (API_BASE_URL) lives in config.js; joke/favorites logic lives in
+// favorites.js. Both are loaded as classic scripts before this one.
+const { API_BASE_URL } = window.APP_CONFIG;
 const { jokeKey, getFavorites, isJokeFavorited, toggleFavorite, escapeHtml } = window.Favorites;
 
 window.addEventListener('DOMContentLoaded', () => {

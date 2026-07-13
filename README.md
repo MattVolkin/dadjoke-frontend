@@ -19,13 +19,15 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 
 - `index.html` - App shell and UI layout.
 - `style.css` - Visual design, responsive rules, and sidebar styles.
+- `config.js` - Deployment config (currently just `API_BASE_URL`); the one place to point the frontend at a different backend.
+- `favorites.js` - Pure joke/favorites logic (`jokeKey`, `escapeHtml`, favorites storage), unit-tested in `test/`.
 - `app.js` - API calls, rendering logic, search, and favorites handling.
 - `favicon.svg` - Site favicon.
 - `CNAME` - Custom domain configuration for GitHub Pages.
 
 ## How It Works
 
-The frontend expects a backend that exposes joke endpoints. In `app.js`, the API base URL is configured with `API_BASE_URL`, and the app uses that value to fetch jokes and resolve audio file paths.
+The frontend expects a backend that exposes joke endpoints. The API base URL is configured in `config.js` as `window.APP_CONFIG.API_BASE_URL`, and the app uses that value to fetch jokes and resolve audio file paths.
 
 Current behavior includes:
 
@@ -40,7 +42,7 @@ Because this is a static frontend that uses `fetch()`, it is best to serve it th
 1. Open the project folder in VS Code or your editor.
 2. Start a simple static server, such as Live Server or any local HTTP server.
 3. Open the site in your browser.
-4. Make sure the backend URL in `app.js` points to a running API.
+4. Make sure `config.js` (or a local override, see "Configuration") points at a running API.
 
 Example backend URLs used by the app:
 
@@ -49,7 +51,28 @@ Example backend URLs used by the app:
 
 ## Configuration
 
-If you want to point the frontend at a different backend, update `API_BASE_URL` in `app.js`.
+The backend URL is set once, in `config.js`:
+
+```js
+window.APP_CONFIG = {
+  API_BASE_URL: 'https://jokegen-backend.onrender.com',
+};
+```
+
+To point at a different backend for local development, create `config.local.js`
+(gitignored, so it never gets committed) with the same shape, and uncomment the
+`config.local.js` `<script>` tag in `index.html`:
+
+```js
+// config.local.js
+window.APP_CONFIG = {
+  API_BASE_URL: 'http://localhost:5000',
+};
+```
+
+It loads after `config.js` and overwrites `window.APP_CONFIG`, so nothing else
+needs to change. Remember to re-comment the tag (or just delete `config.local.js`)
+before committing.
 
 ## Development
 

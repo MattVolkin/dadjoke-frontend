@@ -19,3 +19,6 @@ desktop.ini
 !.dev.vars.example
 .env*
 !.env.example
+
+# Local config override (see config.js / README "Configuration")
+config.local.js
