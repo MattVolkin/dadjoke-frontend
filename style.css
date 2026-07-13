@@ -247,6 +247,51 @@ input[type="checkbox"] {
   flex-shrink: 0;
 }
 
+/* --- SEARCH SECTION --- */
+#search-section {
+  display: none;
+}
+
+.search-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#clear-search-btn {
+  background: var(--black);
+  color: var(--gold);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--gold);
+}
+
+#show-more-btn {
+  display: none;
+}
+
+/* --- JOKE CARD MEDIA --- */
+.media-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.audio-player {
+  flex: 1;
+}
+
+.joke-heart {
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+
+.favorite-item-text {
+  flex: 1;
+  cursor: pointer;
+}
+
 /* --- SIDEBAR --- */
 #favorites-sidebar {
   position: fixed;
@@ -295,6 +340,13 @@ input[type="checkbox"] {
   overflow-y: auto;
   padding: var(--main-padding);
   border-bottom-right-radius: var(--border-radius);
+}
+
+.favorite-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .favorite-item .favorited {

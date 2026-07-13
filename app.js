@@ -1,29 +1,48 @@
-// app.js - JokeGen Website Skeleton
-
 const API_BASE_URL = 'https://jokegen-backend.onrender.com';
 
-// Cookie utility functions and helpers
-function getFavoritesFromCookies() {
-    const match = document.cookie.match(/(?:^|; )favorites=([^;]*)/);
-    return match ? JSON.parse(decodeURIComponent(match[1])) : [];
+const FAVORITES_KEY = 'favorites';
+
+function getFavorites() {
+    try {
+        return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+    } catch {
+        return [];
+    }
 }
 
-function setFavoritesToCookies(favorites) {
-    const encoded = encodeURIComponent(JSON.stringify(favorites));
-    document.cookie = `favorites=${encoded}; path=/; max-age=31536000`; // 1 year
+function setFavorites(favorites) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+}
+
+function isJokeFavorited(joke) {
+    return getFavorites().some(fav => fav.joke_text === joke.joke_text);
+}
+
+function toggleFavorite(joke) {
+    let favorites = getFavorites();
+    if (favorites.some(fav => fav.joke_text === joke.joke_text)) {
+        favorites = favorites.filter(fav => fav.joke_text !== joke.joke_text);
+    } else {
+        favorites.push(joke);
+    }
+    setFavorites(favorites);
+}
+
+function escapeHtml(text) {
+    const el = document.createElement('div');
+    el.textContent = text;
+    return el.innerHTML;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    // DOM references
     const jokeDisplay = document.getElementById('joke-display');
     const randomJokeBtn = document.getElementById('random-joke-btn');
     const searchForm = document.getElementById('search-form');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
-    const jokeAudio = document.getElementById('joke-audio');
-    const autoplayCheckbox = document.getElementById('autoplay-audio');
     const searchSection = document.getElementById('search-section');
     const showMoreBtn = document.getElementById('show-more-btn');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
     const hamburgerMenu = document.getElementById('hamburger-menu');
     const favoritesSidebar = document.getElementById('favorites-sidebar');
     const closeSidebar = document.getElementById('close-sidebar');
@@ -33,179 +52,108 @@ window.addEventListener('DOMContentLoaded', () => {
     let visibleCount = 0;
     const RESULTS_PER_BATCH = 5;
 
-    // Toggle favorite status and update sidebar
-    function toggleFavorite(joke) {
-        const jokeKey = joke.joke_text;
-        let favorites = getFavoritesFromCookies();
-        const isFavorited = favorites.some(fav => fav.joke_text === jokeKey);
-
-        if (!isFavorited) {
-            favorites.push(joke);
-            setFavoritesToCookies(favorites);
-        } else {
-            favorites = favorites.filter(fav => fav.joke_text !== jokeKey);
-            setFavoritesToCookies(favorites);
-        }
-        updateFavoritesUI();
+    function createHeart(joke) {
+        const heart = document.createElement('span');
+        heart.textContent = '♥';
+        heart.className = 'joke-heart';
+        heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
+        heart.classList.toggle('favorited', isJokeFavorited(joke));
+        heart.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleFavorite(joke);
+            updateFavoritesUI();
+            heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
+            heart.classList.toggle('favorited', isJokeFavorited(joke));
+        });
+        return heart;
     }
 
-    // Render favorites in sidebar only
+    function createMediaContainer(joke) {
+        const container = document.createElement('div');
+        container.className = 'media-container';
+
+        const audio = document.createElement('audio');
+        audio.src = `${API_BASE_URL}${joke.audio_file_path}`;
+        audio.controls = true;
+        audio.className = 'audio-player';
+
+        container.appendChild(audio);
+        container.appendChild(createHeart(joke));
+        return container;
+    }
+
+    function populateJokeContents(el, joke) {
+        el.innerHTML = '';
+        const jokeText = document.createElement('p');
+        jokeText.innerHTML = escapeHtml(joke.joke_text || 'No joke found.').replace(/\n/g, '<br>');
+        el.appendChild(jokeText);
+        if (joke.audio_file_path) {
+            el.appendChild(createMediaContainer(joke));
+        }
+    }
+
+    function displayJoke(joke) {
+        populateJokeContents(jokeDisplay, joke);
+    }
+
+    function createJokeCard(joke) {
+        const card = document.createElement('div');
+        card.className = 'search-result';
+        populateJokeContents(card, joke);
+        return card;
+    }
+
     function renderFavoritesSidebar(favorites) {
         favoritesSidebarList.innerHTML = '';
         if (favorites.length === 0) {
-            favoritesSidebarList.innerHTML = '<p>No favorites yet.</p>';
+            const empty = document.createElement('p');
+            empty.textContent = 'No favorites yet.';
+            favoritesSidebarList.appendChild(empty);
             return;
         }
         favorites.forEach(joke => {
-            const fav = document.createElement('div');
-            fav.className = 'favorite-item';
-            fav.style.display = 'flex';
-            fav.style.alignItems = 'center';
-            fav.style.justifyContent = 'space-between';
-            fav.style.marginBottom = '1rem';
+            const item = document.createElement('div');
+            item.className = 'favorite-item';
 
-            const jokeText = document.createElement('span');
-            jokeText.textContent = joke.joke_text;
-            jokeText.style.flex = '1';
-            jokeText.style.cursor = 'pointer';
-            jokeText.addEventListener('click', () => displayJoke(joke));
+            const textEl = document.createElement('span');
+            textEl.textContent = joke.joke_text;
+            textEl.className = 'favorite-item-text';
+            textEl.addEventListener('click', () => displayJoke(joke));
 
-            const heart = document.createElement('span');
-            heart.textContent = '♥';
-            heart.style.cursor = 'pointer';
-            heart.style.fontSize = '1.5rem';
-            heart.style.color = 'red';
-            heart.style.marginLeft = '1rem';
-            heart.classList.add('favorited');
-            heart.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFavorite(joke);
-                // Update heart color and class after toggling
-                heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
-                heart.classList.toggle('favorited', isJokeFavorited(joke));
-            });
-
-            fav.appendChild(jokeText);
-            fav.appendChild(heart);
-            favoritesSidebarList.appendChild(fav);
+            item.appendChild(textEl);
+            item.appendChild(createHeart(joke));
+            favoritesSidebarList.appendChild(item);
         });
     }
 
     function updateFavoritesUI() {
-        const favorites = getFavoritesFromCookies();
-        renderFavoritesSidebar(favorites);
-    }
-
-    // Helper function to display a joke and handle audio
-    function displayJoke(joke) {
-        jokeDisplay.innerHTML = '';
-
-        const jokeText = document.createElement('p');
-        jokeText.innerHTML = (joke.joke_text || 'No joke found.').replace(/\n/g, '<br>');
-        jokeDisplay.appendChild(jokeText);
-
-        if (joke.audio_file_path) {
-            const mediaContainer = document.createElement('div');
-            mediaContainer.style.display = 'flex';
-            mediaContainer.style.alignItems = 'center';
-            mediaContainer.style.justifyContent = 'space-between';
-
-            const audio = document.createElement('audio');
-            audio.src = `${API_BASE_URL}${joke.audio_file_path}`;
-            audio.controls = true;
-            audio.style.flex = '1';
-
-            const heart = document.createElement('span');
-            heart.textContent = '♥';
-            heart.style.cursor = 'pointer';
-            heart.style.fontSize = '1.5rem';
-            heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
-            heart.style.marginLeft = '1rem';
-            heart.classList.toggle('favorited', isJokeFavorited(joke));
-            heart.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFavorite(joke);
-                // Update heart color and class after toggling
-                heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
-                heart.classList.toggle('favorited', isJokeFavorited(joke));
-            });
-
-            mediaContainer.appendChild(audio);
-            mediaContainer.appendChild(heart);
-            jokeDisplay.appendChild(mediaContainer);
-        }
-    }
-
-    function isJokeFavorited(joke) {
-        const favorites = getFavoritesFromCookies();
-        return favorites.some(fav => fav.joke_text === joke.joke_text);
+        renderFavoritesSidebar(getFavorites());
     }
 
     function renderSearchBatch() {
         const end = Math.min(visibleCount + RESULTS_PER_BATCH, searchResultsData.length);
         for (let i = visibleCount; i < end; i++) {
-            const joke = searchResultsData[i];
-            const div = document.createElement('div');
-            div.className = 'search-result';
-
-            const jokeText = document.createElement('p');
-            jokeText.textContent = joke.joke_text;
-            div.appendChild(jokeText);
-
-            if (joke.audio_file_path) {
-                const mediaContainer = document.createElement('div');
-                mediaContainer.style.display = 'flex';
-                mediaContainer.style.alignItems = 'center';
-                mediaContainer.style.justifyContent = 'space-between';
-
-                const audio = document.createElement('audio');
-                audio.src = `${API_BASE_URL}${joke.audio_file_path}`;
-                audio.controls = true;
-                audio.style.flex = '1';
-
-                const heart = document.createElement('span');
-                heart.textContent = '♥';
-                heart.style.cursor = 'pointer';
-                heart.style.fontSize = '1.5rem';
-                heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
-                heart.style.marginLeft = '1rem';
-                heart.classList.toggle('favorited', isJokeFavorited(joke));
-                heart.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFavorite(joke);
-                    // Update heart color and class after toggling
-                    heart.style.color = isJokeFavorited(joke) ? 'red' : 'black';
-                    heart.classList.toggle('favorited', isJokeFavorited(joke));
-                });
-
-                mediaContainer.appendChild(audio);
-                mediaContainer.appendChild(heart);
-                div.appendChild(mediaContainer);
-            }
-
-            searchResults.appendChild(div);
+            searchResults.appendChild(createJokeCard(searchResultsData[i]));
         }
         visibleCount = end;
-        // Show or hide the "Show More Results" button
         showMoreBtn.style.display = (visibleCount < searchResultsData.length) ? 'block' : 'none';
     }
 
-    // Hamburger menu logic
-    hamburgerMenu.addEventListener('click', () => {
-        favoritesSidebar.classList.add('open');
+    hamburgerMenu.addEventListener('click', () => favoritesSidebar.classList.add('open'));
+    closeSidebar.addEventListener('click', () => favoritesSidebar.classList.remove('open'));
+
+    clearSearchBtn.addEventListener('click', () => {
+        searchSection.style.display = 'none';
+        searchResults.innerHTML = '';
+        searchInput.value = '';
+        searchResultsData = [];
+        visibleCount = 0;
     });
 
-    closeSidebar.addEventListener('click', () => {
-        favoritesSidebar.classList.remove('open');
-    });
-
-    // Initial sidebar render
     updateFavoritesUI();
 
-    // Add all event listeners here
     randomJokeBtn.addEventListener('click', async () => {
         jokeDisplay.textContent = 'Loading...';
-        jokeAudio.style.display = 'none';
         try {
             const response = await fetch(`${API_BASE_URL}/random`);
             if (!response.ok) {
@@ -215,25 +163,22 @@ window.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             if (data.error) {
                 jokeDisplay.textContent = 'Error: ' + data.error;
-                jokeAudio.style.display = 'none';
             } else {
                 displayJoke(data);
             }
         } catch (err) {
             jokeDisplay.textContent = 'Failed to fetch joke. Is the backend running?';
-            jokeAudio.style.display = 'none';
             console.error(err);
         }
     });
 
-    // Add submit event listener for search form
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const term = searchInput.value.trim();
         if (!term) return;
 
         searchResults.innerHTML = 'Searching...';
-        searchSection.style.display = 'block'; // Show search section when searching
+        searchSection.style.display = 'block';
 
         try {
             const response = await fetch(`${API_BASE_URL}/search?term=${encodeURIComponent(term)}`);
@@ -246,7 +191,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 visibleCount = 0;
                 searchResults.innerHTML = '';
                 renderSearchBatch();
-                searchSection.style.display = 'block';
             } else {
                 searchResults.textContent = 'No jokes found.';
                 showMoreBtn.style.display = 'none';
@@ -258,6 +202,5 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add click event listener for show more button
     showMoreBtn.addEventListener('click', renderSearchBatch);
 });

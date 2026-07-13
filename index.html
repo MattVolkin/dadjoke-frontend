@@ -31,32 +31,28 @@
 
   <main>
     <!-- Search Section -->
-    <section id="search-section" style="display:none;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+    <section id="search-section">
+      <div class="search-section-header">
         <h2>Search</h2>
-        <button id="clear-search-btn" style="background: var(--black); color: var(--gold); padding: 0.5rem 1rem; border-radius: 12px; border: 1px solid var(--gold); cursor: pointer;">Clear Search</button>
+        <button id="clear-search-btn">Clear Search</button>
       </div>
       <div id="search-results"></div>
-      <button id="show-more-btn" style="display:none;">Show More Results</button>
+      <button id="show-more-btn">Show More Results</button>
     </section>
 
     <!-- Random Joke Section -->
     <section id="joke-section">
       <h2>Random Joke</h2>
       <div id="joke-display" class="joke-box">Generated Joke Text</div>
-      <audio id="joke-audio" controls style="display: none;"></audio>
       <button id="random-joke-btn">Get Random Joke</button>
-      <label><input type="checkbox" id="autoplay-audio"> Autoplay audio</label>
     </section>
 
   </main>
 
   <footer>
-    
+
   </footer>
 
   <script src="app.js"></script>
 </body>
 </html>
-
-

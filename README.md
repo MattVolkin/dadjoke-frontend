@@ -11,7 +11,7 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 - Fetch a random joke from the API with one click.
 - Search jokes by keyword and load results in batches.
 - Play audio when a joke includes an `audio_file_path`.
-- Save and remove favorites in the browser using cookies.
+- Save and remove favorites in the browser using localStorage.
 - Open the favorites sidebar from the hamburger menu.
 - Responsive layout for desktop and mobile screens.
 
@@ -20,7 +20,6 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 - `index.html` - App shell and UI layout.
 - `style.css` - Visual design, responsive rules, and sidebar styles.
 - `app.js` - API calls, rendering logic, search, and favorites handling.
-- `Joke audio/` - Local audio assets included with the project.
 - `CNAME` - Custom domain configuration for GitHub Pages.
 
 ## How It Works
@@ -31,7 +30,7 @@ Current behavior includes:
 
 - `GET /random` to load a random joke.
 - `GET /search?term=...` to search jokes.
-- Favorites are persisted in a `favorites` cookie.
+- Favorites are persisted in `localStorage` under the key `favorites`.
 
 ## Running Locally
 
@@ -55,5 +54,4 @@ If you want to point the frontend at a different backend, update `API_BASE_URL` 
 
 - Search results are rendered in batches of 5 and can be expanded with the Show More Results button.
 - Jokes with audio show an inline audio player.
-- Favorites are stored per browser, so clearing cookies will clear saved favorites.
-
+- Favorites are stored per browser using `localStorage`. Clearing cookies has no effect on saved favorites.

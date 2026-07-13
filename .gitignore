@@ -1,0 +1,11 @@
+# Audio assets are served by the backend API
+Joke audio/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor swap files
+*.swp
+*.swo
