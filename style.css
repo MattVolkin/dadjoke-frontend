@@ -99,17 +99,15 @@ header {
 }
 
 /* --- INTERACTIVE ELEMENTS --- */
-/* The Favorites toggle is a solid gold pill matching the other primary buttons
-   (Get Random Joke / Clear Search), with the heart icon inline. It inverts to
-   ink/gold on hover like the rest. */
+/* Favorites uses brand-ink chrome with gold text/icon for stronger contrast. */
 .favorites-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
   flex-shrink: 0;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--gold);
   border: none;
   cursor: pointer;
   min-height: 44px;
@@ -133,9 +131,14 @@ header {
   flex-shrink: 0;
 }
 
+.favorites-btn__icon path {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 .favorites-btn:hover,
 .favorites-btn:focus-visible {
-  background: var(--ink);
+  background: #111;
   color: var(--gold);
   box-shadow: var(--elev-2);
   outline: none;
@@ -341,7 +344,7 @@ button:disabled:hover {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: var(--space-2);
+  gap: 0.6rem;
   flex-wrap: wrap;
   margin-top: var(--space-2);
 }
@@ -355,12 +358,14 @@ button:disabled:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
+  min-height: 42px;
+  padding: 0.72rem 1.1rem;
+  font-size: 0.98rem;
   line-height: 1;
 }
 
 .joke-actions .favorites-btn {
-  padding: 0.8rem 1.25rem;
+  padding: 0.72rem 1.05rem;
 }
 
 /* --- SEARCH SECTION --- */
@@ -379,13 +384,15 @@ button:disabled:hover {
 .search-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 0.6rem;
   flex-wrap: wrap;
 }
 
 .search-actions .favorites-btn {
-  /* Match the compact Clear Search control in this row. */
-  padding: 0.65rem 1.1rem;
+  /* Keep search-header actions compact and balanced as a pair. */
+  min-height: 40px;
+  padding: 0.56rem 0.95rem;
+  font-size: 0.92rem;
   box-shadow: var(--elev-1);
 }
 
@@ -393,19 +400,22 @@ button:disabled:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  background: linear-gradient(135deg, var(--coral) 0%, #ff9f5a 52%, var(--gold) 100%);
-  color: var(--ink);
-  padding: 0.65rem 1.1rem;
+  min-height: 40px;
+  background: #fff7e8;
+  color: var(--text);
+  padding: 0.56rem 0.95rem;
   border-radius: 999px;
-  border: 1px solid rgba(34, 34, 34, 0.1);
+  border: 1px solid rgba(34, 34, 34, 0.2);
   margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
   box-shadow: var(--elev-1);
 }
 
 #clear-search-btn:hover {
-  background: linear-gradient(135deg, var(--ink) 0%, #3d4f8f 100%);
+  background: var(--ink);
   color: var(--gold);
+  border-color: var(--ink);
 }
 
 #show-more-btn {
