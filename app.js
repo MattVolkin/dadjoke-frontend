@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
     favoritesSidebarList.innerHTML = '';
     if (favorites.length === 0) {
       const empty = document.createElement('p');
-      empty.textContent = '💛 No favorites yet — tap the heart on a joke to save it.';
+      empty.textContent = 'No favorites yet — tap the heart on a joke to save it.';
       favoritesSidebarList.appendChild(empty);
       return;
     }

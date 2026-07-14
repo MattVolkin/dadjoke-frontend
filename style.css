@@ -14,10 +14,17 @@
   --surface: #ffffff;
   --text: #222222;
   --muted: rgba(34, 34, 34, 0.58);
+  /* Neutral hairline border for surfaces — accent gold is reserved for brand
+     chrome and interactive controls, not for outlining every panel. */
+  --border: rgba(34, 34, 34, 0.12);
 
   --shadow: rgba(44, 44, 44, 0.15);
   --shadow-light: rgba(44, 44, 44, 0.08);
   --shadow-dark: rgba(44, 44, 44, 0.22);
+
+  /* Soft, layered surface shadows. */
+  --elev-1: 0 1px 2px rgba(17, 17, 17, 0.04), 0 2px 8px rgba(17, 17, 17, 0.05);
+  --elev-2: 0 2px 4px rgba(17, 17, 17, 0.05), 0 8px 24px rgba(17, 17, 17, 0.07);
 
   /* Spacing scale */
   --space-1: 0.5rem;
@@ -30,7 +37,12 @@
   --search-height: 48px;
   --search-width: 340px;
   --main-padding: 1.75rem;
-  --border-radius: 20px;
+  /* Radius scale (pills stay 999px). --border-radius keeps the large value so
+     existing references stay valid. */
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --border-radius: 18px;
   --button-padding: 0.8rem 1.8rem;
   --button-size: 1.05rem;
   --hamburger-size: 2rem;
@@ -42,7 +54,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -125,7 +137,7 @@ header {
   color: var(--gold);
   cursor: pointer;
   padding: 0.2rem 0.7rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   line-height: 1;
   transition:
     background 0.2s,
@@ -148,7 +160,6 @@ header {
   letter-spacing: 1px;
   white-space: nowrap;
   text-align: center;
-  text-shadow: 0 2px 8px var(--shadow);
 }
 
 /* --- SEARCH & FORM ELEMENTS --- */
@@ -159,7 +170,7 @@ header {
   margin: 0;
   background: var(--surface);
   border-radius: 999px;
-  box-shadow: 0 2px 8px var(--shadow-light);
+  box-shadow: var(--elev-1);
   height: var(--search-height);
   max-width: var(--search-width);
   width: 100%;
@@ -220,9 +231,9 @@ main {
   margin: var(--space-4) auto;
   padding: var(--main-padding);
   background: var(--surface);
-  box-shadow: 0 6px 24px var(--shadow-light);
-  border-radius: var(--border-radius);
-  border: 2px solid var(--gold);
+  box-shadow: var(--elev-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
 }
 
 h2 {
@@ -233,19 +244,17 @@ h2 {
 }
 
 /* --- CONTENT BOXES & BUTTONS --- */
+/* Light inset panels inside the main card — a subtle neutral border and a
+   faintly tinted background give definition without the gold box-in-a-box. */
 .joke-box,
 #search-results .search-result {
-  border: 2px solid var(--gold);
+  border: 1px solid var(--border);
   padding: var(--main-padding);
   margin: var(--space-3) 0;
-  background: var(--surface);
-  border-radius: 16px;
-  box-shadow: 0 4px 14px var(--shadow-light);
+  background: var(--bg);
+  border-radius: var(--radius);
   font-size: 1.2rem;
   line-height: 1.6;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
 }
 
 .joke-box {
@@ -264,14 +273,8 @@ h2 {
 
 #search-results .search-result {
   padding: 1rem 1.1rem;
-  border-radius: 12px;
+  border-radius: var(--radius);
   margin-bottom: 0.8rem;
-}
-
-.joke-box:hover,
-#search-results .search-result:hover {
-  box-shadow: 0 8px 22px var(--shadow);
-  transform: translateY(-3px);
 }
 
 button,
@@ -285,14 +288,13 @@ button,
   margin-bottom: var(--space-3);
   cursor: pointer;
   font-size: var(--button-size);
-  border-radius: 25px;
+  border-radius: 999px;
   font-weight: 600;
-  box-shadow: 0 4px 12px var(--shadow);
+  box-shadow: var(--elev-1);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
     background 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 button:hover,
@@ -300,8 +302,7 @@ button:hover,
 #show-more-btn:hover {
   background: var(--ink);
   color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--shadow-dark);
+  box-shadow: var(--elev-2);
 }
 
 button:focus-visible {
@@ -325,7 +326,7 @@ button:focus-visible {
   background: var(--ink);
   color: var(--gold);
   padding: 0.5rem 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--gold);
   margin: 0;
 }
@@ -374,7 +375,7 @@ button:focus-visible {
 }
 
 .joke-heart:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
   color: #e0245e;
 }
 
@@ -420,7 +421,7 @@ button:focus-visible {
   color: var(--text);
   border-top-right-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
-  border-right: 3px solid var(--gold);
+  border-right: 1px solid var(--border);
 }
 
 #favorites-sidebar.open {
@@ -466,16 +467,16 @@ button:focus-visible {
   padding: 0.85rem 0.9rem;
   margin-bottom: 0.6rem;
   background: var(--bg);
-  border: 1px solid var(--shadow-light);
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .favorite-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--shadow-light);
+  background: var(--surface);
+  border-color: var(--gold);
 }
 
 .favorite-item .favorite-item-text {
@@ -568,7 +569,7 @@ footer a:focus-visible {
 
   main {
     margin: var(--space-2) auto;
-    border-radius: 16px;
+    border-radius: var(--radius);
   }
 
   h2 {
@@ -623,8 +624,8 @@ footer a:focus-visible {
     flex-shrink: 0;
     height: auto;
     max-height: calc(100vh - 110px);
-    box-shadow: 0 6px 24px var(--shadow-light);
-    border: 2px solid var(--gold);
+    box-shadow: var(--elev-2);
+    border: 1px solid var(--border);
     border-radius: var(--border-radius);
   }
 
@@ -722,14 +723,14 @@ footer a:focus-visible {
     --surface: #242424;
     --text: #f2f2f2;
     --muted: rgba(242, 242, 242, 0.6);
+    --border: rgba(255, 255, 255, 0.1);
 
     --shadow: rgba(0, 0, 0, 0.5);
     --shadow-light: rgba(0, 0, 0, 0.35);
     --shadow-dark: rgba(0, 0, 0, 0.6);
-  }
 
-  .favorite-item {
-    border-color: rgba(255, 255, 255, 0.08);
+    --elev-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.35);
+    --elev-2: 0 2px 4px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.45);
   }
 
   footer a:hover,
