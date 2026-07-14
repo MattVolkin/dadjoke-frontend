@@ -356,7 +356,10 @@ button:disabled:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  /* margin reset here (not just .joke-actions button) so it also beats the
+     ID-specificity margin the base rule sets on #random-joke-btn. */
+  margin: 0;
+  height: 44px;
   padding: 0.72rem 1.1rem;
   font-size: 0.98rem;
   line-height: 1;
@@ -386,9 +389,16 @@ button:disabled:hover {
   flex-wrap: wrap;
 }
 
+/* Reset the base-button margin leaked onto the Favorites <button> so it can't
+   shift vertically against Clear Search (mirrors .joke-actions button). */
+.search-actions button {
+  margin: 0;
+}
+
 .search-actions .favorites-btn {
-  /* Keep search-header actions compact and balanced as a pair. */
-  min-height: 40px;
+  /* 44px matches the base .favorites-btn min-height (which would otherwise
+     override a smaller height) so the pair is exactly equal. */
+  height: 44px;
   padding: 0.56rem 0.95rem;
   font-size: 0.92rem;
   box-shadow: var(--elev-1);
@@ -398,7 +408,7 @@ button:disabled:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  height: 44px;
   background: var(--gold);
   color: var(--ink);
   padding: 0.56rem 0.95rem;
