@@ -310,6 +310,18 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/* In-flight state (e.g. "Show More" while fetching the next page). */
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+button:disabled:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
 /* --- SEARCH SECTION --- */
 #search-section {
   display: none;

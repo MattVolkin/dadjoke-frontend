@@ -100,6 +100,6 @@ included only as a lightweight quality gate.
 
 ## Notes
 
-- Search results are rendered in batches of 5 and can be expanded with the Show More Results button.
+- Search is paged from the server: each "Show More Results" click fetches the next page (via the API's `limit`/`offset`) and appends it, so every match is reachable — not just the first page.
 - Jokes with audio show an inline audio player.
 - Favorites are stored per browser using `localStorage`. Clearing cookies has no effect on saved favorites.

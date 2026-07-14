@@ -19,9 +19,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const closeSidebarBtn = document.getElementById('close-sidebar');
   const favoritesSidebarList = document.getElementById('favorites-sidebar-list');
 
-  let searchResultsData = [];
-  let visibleCount = 0;
-  const RESULTS_PER_BATCH = 5;
+  // Search is paged straight from the server (limit/offset). The API returns no
+  // total, so "more may exist" is inferred: a full page (=== PAGE_SIZE) means
+  // keep the button; a short page means we've reached the end.
+  const PAGE_SIZE = 10;
+  let currentSearchTerm = '';
+  let searchOffset = 0;
+  let loadingMore = false;
 
   // localStorage is the single source of truth for favorites; every heart in
   // the DOM derives its state from it. A joke can be shown in several places at
@@ -127,13 +131,21 @@ window.addEventListener('DOMContentLoaded', () => {
     renderFavoritesSidebar(getFavorites());
   }
 
-  function renderSearchBatch() {
-    const end = Math.min(visibleCount + RESULTS_PER_BATCH, searchResultsData.length);
-    for (let i = visibleCount; i < end; i++) {
-      searchResults.appendChild(createJokeCard(searchResultsData[i]));
+  async function fetchSearchPage(term, offset) {
+    const url = `${API_BASE_URL}/search?term=${encodeURIComponent(term)}&limit=${PAGE_SIZE}&offset=${offset}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
     }
-    visibleCount = end;
-    showMoreBtn.style.display = visibleCount < searchResultsData.length ? 'block' : 'none';
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    return data.jokes || [];
+  }
+
+  function appendSearchResults(jokes) {
+    jokes.forEach((joke) => searchResults.appendChild(createJokeCard(joke)));
   }
 
   // On wide screens the favorites panel is docked and always visible; below
@@ -220,8 +232,9 @@ window.addEventListener('DOMContentLoaded', () => {
     jokeSection.style.display = '';
     searchResults.innerHTML = '';
     searchInput.value = '';
-    searchResultsData = [];
-    visibleCount = 0;
+    showMoreBtn.style.display = 'none';
+    currentSearchTerm = '';
+    searchOffset = 0;
   });
 
   updateFavoritesUI();
@@ -251,37 +264,50 @@ window.addEventListener('DOMContentLoaded', () => {
     const term = searchInput.value.trim();
     if (!term) return;
 
-    searchResults.innerHTML = 'Searching...';
+    currentSearchTerm = term;
+    searchOffset = 0;
+    searchResults.textContent = 'Searching...';
     searchSection.style.display = 'block';
+    showMoreBtn.style.display = 'none';
     // Focused search view: hide the Random Joke section until the search is cleared.
     jokeSection.style.display = 'none';
 
     try {
-      const response = await fetch(`${API_BASE_URL}/search?term=${encodeURIComponent(term)}`);
-      if (!response.ok) {
-        searchResults.textContent = `Error: ${response.status} ${response.statusText}`;
-        showMoreBtn.style.display = 'none';
+      const jokes = await fetchSearchPage(term, 0);
+      searchResults.innerHTML = '';
+      if (jokes.length === 0) {
+        searchResults.textContent = 'No jokes found.';
         return;
       }
-      const data = await response.json();
-      if (data.error) {
-        searchResults.textContent = 'Error: ' + data.error;
-        showMoreBtn.style.display = 'none';
-      } else if (data.jokes && data.jokes.length > 0) {
-        searchResultsData = data.jokes;
-        visibleCount = 0;
-        searchResults.innerHTML = '';
-        renderSearchBatch();
-      } else {
-        searchResults.textContent = 'No jokes found.';
-        showMoreBtn.style.display = 'none';
-      }
+      appendSearchResults(jokes);
+      searchOffset = jokes.length;
+      // A full page means there may be more; a short page means we're done.
+      showMoreBtn.style.display = jokes.length === PAGE_SIZE ? 'block' : 'none';
     } catch (err) {
-      searchResults.textContent = 'Failed to fetch search results.';
+      searchResults.textContent = `Error: ${err.message}`;
       showMoreBtn.style.display = 'none';
       console.error(err);
     }
   });
 
-  showMoreBtn.addEventListener('click', renderSearchBatch);
+  showMoreBtn.addEventListener('click', async () => {
+    if (loadingMore) return;
+    loadingMore = true;
+    const label = showMoreBtn.textContent;
+    showMoreBtn.disabled = true;
+    showMoreBtn.textContent = 'Loading…';
+    try {
+      const jokes = await fetchSearchPage(currentSearchTerm, searchOffset);
+      appendSearchResults(jokes);
+      searchOffset += jokes.length;
+      showMoreBtn.style.display = jokes.length === PAGE_SIZE ? 'block' : 'none';
+    } catch (err) {
+      // Keep the results already shown and let the user retry.
+      console.error(err);
+    } finally {
+      loadingMore = false;
+      showMoreBtn.disabled = false;
+      showMoreBtn.textContent = label;
+    }
+  });
 });
