@@ -1,6 +1,6 @@
-# Dad Joke Player
+# Nacho Average Dad Jokes
 
-Dad Joke Player is a lightweight frontend for browsing, searching, and saving jokes with audio playback support. It is built as a static site with plain HTML, CSS, and JavaScript, and it talks to a backend API for joke data.
+Nacho Average Dad Jokes is a lightweight frontend for browsing, searching, and saving jokes with audio playback support. It is built as a static site with plain HTML, CSS, and JavaScript, and it talks to a backend API for joke data.
 
 ## Project URL
 
@@ -15,8 +15,9 @@ The backend API that serves the jokes lives in a separate repo:
 - Search jokes by keyword and load results in batches.
 - Play audio when a joke includes an `audio_file_path`.
 - Save and remove favorites in the browser using localStorage.
-- Open the favorites sidebar from the hamburger menu.
-- Responsive layout for desktop and mobile screens.
+- Favorites panel that docks beside the joke player on wide screens and collapses
+  into a slide-out drawer (opened by the **Favorites** button) when space is tight.
+- Responsive layout for desktop and mobile screens, with light and dark themes.
 
 ## Project Structure
 

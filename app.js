@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const jokeSection = document.getElementById('joke-section');
   const showMoreBtn = document.getElementById('show-more-btn');
   const clearSearchBtn = document.getElementById('clear-search-btn');
-  const hamburgerMenu = document.getElementById('hamburger-menu');
+  const favoritesToggle = document.getElementById('favorites-toggle');
   const favoritesSidebar = document.getElementById('favorites-sidebar');
   const sidebarBackdrop = document.getElementById('sidebar-backdrop');
   const closeSidebarBtn = document.getElementById('close-sidebar');
@@ -136,7 +136,28 @@ window.addEventListener('DOMContentLoaded', () => {
     showMoreBtn.style.display = visibleCount < searchResultsData.length ? 'block' : 'none';
   }
 
-  // --- Sidebar open/close with focus management ---
+  // On wide screens the favorites panel is docked and always visible; below
+  // this width it collapses into the slide-out drawer. Only in drawer mode do
+  // the backdrop, `inert`, and focus trap apply.
+  const dockQuery = window.matchMedia('(min-width: 1100px)');
+
+  function syncSidebarMode() {
+    if (dockQuery.matches) {
+      // Docked: always visible and interactive, no drawer chrome.
+      favoritesSidebar.classList.remove('open');
+      favoritesSidebar.removeAttribute('inert');
+      favoritesSidebar.setAttribute('aria-hidden', 'false');
+      sidebarBackdrop.classList.remove('open');
+      sidebarBackdrop.hidden = true;
+      favoritesToggle.setAttribute('aria-expanded', 'false');
+    } else if (!favoritesSidebar.classList.contains('open')) {
+      // Collapsed and closed: skip it in the Tab order and for assistive tech.
+      favoritesSidebar.setAttribute('inert', '');
+      favoritesSidebar.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  // --- Sidebar open/close with focus management (drawer mode only) ---
   // While closed, the drawer is `inert` + aria-hidden so it is skipped by both
   // the Tab order and assistive tech. While open, Tab is trapped inside it.
   function showSidebar() {
@@ -146,7 +167,7 @@ window.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => sidebarBackdrop.classList.add('open'));
     favoritesSidebar.removeAttribute('inert');
     favoritesSidebar.setAttribute('aria-hidden', 'false');
-    hamburgerMenu.setAttribute('aria-expanded', 'true');
+    favoritesToggle.setAttribute('aria-expanded', 'true');
     closeSidebarBtn.focus();
   }
 
@@ -156,8 +177,8 @@ window.addEventListener('DOMContentLoaded', () => {
     sidebarBackdrop.hidden = true;
     favoritesSidebar.setAttribute('inert', '');
     favoritesSidebar.setAttribute('aria-hidden', 'true');
-    hamburgerMenu.setAttribute('aria-expanded', 'false');
-    hamburgerMenu.focus();
+    favoritesToggle.setAttribute('aria-expanded', 'false');
+    favoritesToggle.focus();
   }
 
   // Keep focus inside the open drawer: wrap Tab / Shift+Tab at the ends.
@@ -178,9 +199,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  hamburgerMenu.addEventListener('click', showSidebar);
+  favoritesToggle.addEventListener('click', showSidebar);
   closeSidebarBtn.addEventListener('click', hideSidebar);
   sidebarBackdrop.addEventListener('click', hideSidebar);
+  dockQuery.addEventListener('change', syncSidebarMode);
+  syncSidebarMode(); // set correct initial state (HTML defaults to drawer-closed)
 
   document.addEventListener('keydown', (e) => {
     if (!favoritesSidebar.classList.contains('open')) return;

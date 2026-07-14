@@ -31,13 +31,27 @@
     <header>
       <div class="header-content">
         <button
-          id="hamburger-menu"
-          class="hamburger"
+          id="favorites-toggle"
+          class="favorites-btn"
           aria-label="Show favorites"
           aria-controls="favorites-sidebar"
           aria-expanded="false"
         >
-          &#9776;
+          <svg
+            class="favorites-btn__icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12 21s-6.7-4.35-9.33-8.36C1.02 10.16 1.6 6.9 4.1 5.6c1.9-1 4.2-.4 5.4 1.2L12 9.3l2.5-2.5c1.2-1.6 3.5-2.2 5.4-1.2 2.5 1.3 3.08 4.56 1.43 7.04C18.7 16.65 12 21 12 21z"
+            />
+          </svg>
+          <span>Favorites</span>
         </button>
         <h1 class="site-title">Nacho Average Dad Jokes</h1>
         <form id="search-form">
@@ -50,37 +64,41 @@
     <!-- Backdrop dims the page while the favorites drawer is open. -->
     <div id="sidebar-backdrop" hidden></div>
 
-    <!-- Favorites Sidebar -->
-    <aside id="favorites-sidebar" aria-label="Favorites" aria-hidden="true" inert>
-      <div class="sidebar-header">
-        <span>Favorites</span>
-        <button id="close-sidebar" aria-label="Close favorites">&times;</button>
-      </div>
-      <div id="favorites-sidebar-list"></div>
-    </aside>
-
-    <main>
-      <!-- Search Section -->
-      <section id="search-section">
-        <div class="search-section-header">
-          <h2>Search</h2>
-          <button id="clear-search-btn">Clear Search</button>
+    <!-- On wide screens the sidebar and main sit side by side; below the dock
+         breakpoint the sidebar becomes the fixed slide-out drawer. -->
+    <div class="layout">
+      <!-- Favorites Sidebar -->
+      <aside id="favorites-sidebar" aria-label="Favorites" aria-hidden="true" inert>
+        <div class="sidebar-header">
+          <span>Favorites</span>
+          <button id="close-sidebar" aria-label="Close favorites">&times;</button>
         </div>
-        <div id="search-results"></div>
-        <button id="show-more-btn">Show More Results</button>
-      </section>
+        <div id="favorites-sidebar-list"></div>
+      </aside>
 
-      <!-- Random Joke Section -->
-      <section id="joke-section">
-        <h2>Random Joke</h2>
-        <div id="joke-display" class="joke-box">
-          <p class="joke-placeholder">
-            Tap &ldquo;Get Random Joke&rdquo; for your first groaner. &#128516;
-          </p>
-        </div>
-        <button id="random-joke-btn">Get Random Joke</button>
-      </section>
-    </main>
+      <main>
+        <!-- Search Section -->
+        <section id="search-section">
+          <div class="search-section-header">
+            <h2>Search</h2>
+            <button id="clear-search-btn">Clear Search</button>
+          </div>
+          <div id="search-results"></div>
+          <button id="show-more-btn">Show More Results</button>
+        </section>
+
+        <!-- Random Joke Section -->
+        <section id="joke-section">
+          <h2>Random Joke</h2>
+          <div id="joke-display" class="joke-box">
+            <p class="joke-placeholder">
+              Tap &ldquo;Get Random Joke&rdquo; for your first groaner. &#128516;
+            </p>
+          </div>
+          <button id="random-joke-btn">Get Random Joke</button>
+        </section>
+      </main>
+    </div>
 
     <footer>
       <p>
