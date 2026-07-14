@@ -9,6 +9,9 @@
       content="Dad Joke Player - fetch random dad jokes, search by keyword, play audio, and save your favorites, right in the browser."
     />
 
+    <!-- Matches the header so mobile browser chrome blends with the app. -->
+    <meta name="theme-color" content="#222222" />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
@@ -38,14 +41,17 @@
         </button>
         <h1 class="site-title">Dad Joke Player</h1>
         <form id="search-form">
-          <input type="text" id="search-input" placeholder="Search jokes..." />
+          <input type="text" id="search-input" placeholder="Search dad jokes by keyword…" />
           <button type="submit">Search</button>
         </form>
       </div>
     </header>
 
+    <!-- Backdrop dims the page while the favorites drawer is open. -->
+    <div id="sidebar-backdrop" hidden></div>
+
     <!-- Favorites Sidebar -->
-    <aside id="favorites-sidebar" aria-label="Favorites">
+    <aside id="favorites-sidebar" aria-label="Favorites" aria-hidden="true" inert>
       <div class="sidebar-header">
         <span>Favorites</span>
         <button id="close-sidebar" aria-label="Close favorites">&times;</button>
@@ -68,7 +74,9 @@
       <section id="joke-section">
         <h2>Random Joke</h2>
         <div id="joke-display" class="joke-box">
-          <p class="joke-placeholder">Press &ldquo;Get Random Joke&rdquo; to start.</p>
+          <p class="joke-placeholder">
+            Tap &ldquo;Get Random Joke&rdquo; for your first groaner. &#128516;
+          </p>
         </div>
         <button id="random-joke-btn">Get Random Joke</button>
       </section>
@@ -77,7 +85,12 @@
     <footer>
       <p>
         Built for laughs &middot;
-        <a href="https://www.nachoaveragedadjoke.com/">nachoaveragedadjoke.com</a>
+        <a
+          href="https://github.com/MattVolkin/dadjoke-frontend"
+          target="_blank"
+          rel="noopener noreferrer"
+          >View source on GitHub</a
+        >
       </p>
     </footer>
 

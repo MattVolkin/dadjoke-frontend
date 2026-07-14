@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const clearSearchBtn = document.getElementById('clear-search-btn');
   const hamburgerMenu = document.getElementById('hamburger-menu');
   const favoritesSidebar = document.getElementById('favorites-sidebar');
+  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
   const closeSidebarBtn = document.getElementById('close-sidebar');
   const favoritesSidebarList = document.getElementById('favorites-sidebar-list');
 
@@ -99,7 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
     favoritesSidebarList.innerHTML = '';
     if (favorites.length === 0) {
       const empty = document.createElement('p');
-      empty.textContent = 'No favorites yet.';
+      empty.textContent = '💛 No favorites yet — tap the heart on a joke to save it.';
       favoritesSidebarList.appendChild(empty);
       return;
     }
@@ -132,24 +133,57 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Sidebar open/close with focus management ---
+  // While closed, the drawer is `inert` + aria-hidden so it is skipped by both
+  // the Tab order and assistive tech. While open, Tab is trapped inside it.
   function showSidebar() {
     favoritesSidebar.classList.add('open');
+    sidebarBackdrop.hidden = false;
+    // Let the element paint before starting the opacity transition.
+    requestAnimationFrame(() => sidebarBackdrop.classList.add('open'));
+    favoritesSidebar.removeAttribute('inert');
+    favoritesSidebar.setAttribute('aria-hidden', 'false');
     hamburgerMenu.setAttribute('aria-expanded', 'true');
     closeSidebarBtn.focus();
   }
 
   function hideSidebar() {
     favoritesSidebar.classList.remove('open');
+    sidebarBackdrop.classList.remove('open');
+    sidebarBackdrop.hidden = true;
+    favoritesSidebar.setAttribute('inert', '');
+    favoritesSidebar.setAttribute('aria-hidden', 'true');
     hamburgerMenu.setAttribute('aria-expanded', 'false');
     hamburgerMenu.focus();
   }
 
+  // Keep focus inside the open drawer: wrap Tab / Shift+Tab at the ends.
+  function trapSidebarFocus(e) {
+    if (e.key !== 'Tab') return;
+    const focusable = favoritesSidebar.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   hamburgerMenu.addEventListener('click', showSidebar);
   closeSidebarBtn.addEventListener('click', hideSidebar);
+  sidebarBackdrop.addEventListener('click', hideSidebar);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && favoritesSidebar.classList.contains('open')) {
+    if (!favoritesSidebar.classList.contains('open')) return;
+    if (e.key === 'Escape') {
       hideSidebar();
+    } else {
+      trapSidebarFocus(e);
     }
   });
 
