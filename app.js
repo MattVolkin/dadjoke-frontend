@@ -13,7 +13,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const jokeSection = document.getElementById('joke-section');
   const showMoreBtn = document.getElementById('show-more-btn');
   const clearSearchBtn = document.getElementById('clear-search-btn');
-  const favoritesToggle = document.getElementById('favorites-toggle');
+  // The Favorites drawer is opened from a contextual button that lives in the
+  // visible section (next to Get Random Joke, or next to Clear Search), so there
+  // can be more than one in the DOM — only one is visible at a time.
+  const favoritesToggles = document.querySelectorAll('[data-favorites-toggle]');
+  let lastToggle = null;
   const favoritesSidebar = document.getElementById('favorites-sidebar');
   const sidebarBackdrop = document.getElementById('sidebar-backdrop');
   const closeSidebarBtn = document.getElementById('close-sidebar');
@@ -153,6 +157,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // the backdrop, `inert`, and focus trap apply.
   const dockQuery = window.matchMedia('(min-width: 1100px)');
 
+  function setTogglesExpanded(expanded) {
+    favoritesToggles.forEach((btn) => btn.setAttribute('aria-expanded', String(expanded)));
+  }
+
   function syncSidebarMode() {
     if (dockQuery.matches) {
       // Docked: always visible and interactive, no drawer chrome.
@@ -161,7 +169,7 @@ window.addEventListener('DOMContentLoaded', () => {
       favoritesSidebar.setAttribute('aria-hidden', 'false');
       sidebarBackdrop.classList.remove('open');
       sidebarBackdrop.hidden = true;
-      favoritesToggle.setAttribute('aria-expanded', 'false');
+      setTogglesExpanded(false);
     } else if (!favoritesSidebar.classList.contains('open')) {
       // Collapsed and closed: skip it in the Tab order and for assistive tech.
       favoritesSidebar.setAttribute('inert', '');
@@ -179,7 +187,7 @@ window.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => sidebarBackdrop.classList.add('open'));
     favoritesSidebar.removeAttribute('inert');
     favoritesSidebar.setAttribute('aria-hidden', 'false');
-    favoritesToggle.setAttribute('aria-expanded', 'true');
+    setTogglesExpanded(true);
     closeSidebarBtn.focus();
   }
 
@@ -189,8 +197,12 @@ window.addEventListener('DOMContentLoaded', () => {
     sidebarBackdrop.hidden = true;
     favoritesSidebar.setAttribute('inert', '');
     favoritesSidebar.setAttribute('aria-hidden', 'true');
-    favoritesToggle.setAttribute('aria-expanded', 'false');
-    favoritesToggle.focus();
+    setTogglesExpanded(false);
+    // Return focus to the button that opened the drawer, but only if it's still
+    // visible (the home and search buttons swap in/out with their sections).
+    if (lastToggle && lastToggle.offsetParent !== null) {
+      lastToggle.focus();
+    }
   }
 
   // Keep focus inside the open drawer: wrap Tab / Shift+Tab at the ends.
@@ -211,7 +223,12 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  favoritesToggle.addEventListener('click', showSidebar);
+  favoritesToggles.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      lastToggle = btn;
+      showSidebar();
+    });
+  });
   closeSidebarBtn.addEventListener('click', hideSidebar);
   sidebarBackdrop.addEventListener('click', hideSidebar);
   dockQuery.addEventListener('change', syncSidebarMode);
