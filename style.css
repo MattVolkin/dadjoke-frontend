@@ -723,8 +723,11 @@ footer a:focus-visible {
     border-bottom-right-radius: var(--border-radius);
   }
 
-  /* Drawer-only controls have no purpose when the panel is always visible. */
-  .favorites-btn,
+  /* Drawer-only controls have no purpose when the panel is docked and always
+     visible. Match the .joke-actions/.search-actions specificity (0,2,0) so
+     these override the display:inline-flex those rules set. */
+  .joke-actions .favorites-btn,
+  .search-actions .favorites-btn,
   #close-sidebar {
     display: none;
   }
