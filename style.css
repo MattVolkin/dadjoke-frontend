@@ -824,4 +824,14 @@ footer a:focus-visible {
   footer a:focus-visible {
     color: var(--gold);
   }
+  /* Add a gold border to the Favorites button in dark mode for clearer
+     contrast against the ink background. */
+  .favorites-btn {
+    border: 2px solid var(--gold);
+  }
+
+  .favorites-btn:hover,
+  .favorites-btn:focus-visible {
+    border-color: var(--gold);
+  }
 }
