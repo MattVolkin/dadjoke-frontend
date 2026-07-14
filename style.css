@@ -18,7 +18,7 @@
   --muted: rgba(34, 34, 34, 0.58);
   /* Neutral hairline border for surfaces — accent gold is reserved for brand
      chrome and interactive controls, not for outlining every panel. */
-  --border: rgba(34, 34, 34, 0.12);
+  padding: 0.8rem 1.25rem;
 
   --shadow: rgba(44, 44, 44, 0.15);
   --shadow-light: rgba(44, 44, 44, 0.08);
@@ -30,7 +30,7 @@
 
   /* Spacing scale */
   --space-1: 0.5rem;
-  --space-2: 1rem;
+  padding: 0.65rem 1.1rem;
   --space-3: 1.5rem;
   --space-4: 2rem;
 
@@ -41,7 +41,7 @@
   --main-padding: 1.75rem;
   /* Radius scale (pills stay 999px). --border-radius keeps the large value so
      existing references stay valid. */
-  --radius-sm: 10px;
+  padding: 0.65rem 1.1rem;
   --radius: 14px;
   --radius-lg: 18px;
   --border-radius: 18px;
@@ -58,7 +58,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  min-height: 44px;
+  padding: 0.65rem 1.2rem;
   background:
     radial-gradient(circle at top left, rgba(255, 200, 87, 0.16), transparent 32%),
     radial-gradient(circle at top right, rgba(77, 157, 224, 0.12), transparent 28%),
@@ -111,7 +112,8 @@ header {
   color: var(--ink);
   border: none;
   cursor: pointer;
-  padding: 0.65rem 1.15rem;
+  min-height: 44px;
+  padding: 0.65rem 1.2rem;
   border-radius: 999px;
   font-size: var(--button-size);
   font-weight: 600;
@@ -337,7 +339,7 @@ button:disabled:hover {
 /* Action rows that pair the Favorites button with the section's primary action. */
 .joke-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
@@ -346,6 +348,19 @@ button:disabled:hover {
 
 .joke-actions button {
   margin: 0;
+}
+
+.joke-actions #random-joke-btn,
+.joke-actions .favorites-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  line-height: 1;
+}
+
+.joke-actions .favorites-btn {
+  padding: 0.8rem 1.25rem;
 }
 
 /* --- SEARCH SECTION --- */
@@ -370,7 +385,7 @@ button:disabled:hover {
 
 .search-actions .favorites-btn {
   /* Match the compact Clear Search control in this row. */
-  padding: 0.58rem 1rem;
+  padding: 0.65rem 1.1rem;
   box-shadow: var(--elev-1);
 }
 
@@ -378,10 +393,10 @@ button:disabled:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  min-height: 44px;
   background: linear-gradient(135deg, var(--coral) 0%, #ff9f5a 52%, var(--gold) 100%);
   color: var(--ink);
-  padding: 0.58rem 1rem;
+  padding: 0.65rem 1.1rem;
   border-radius: 999px;
   border: 1px solid rgba(34, 34, 34, 0.1);
   margin: 0;
