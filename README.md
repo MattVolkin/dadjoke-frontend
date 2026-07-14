@@ -6,6 +6,9 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 
 [https://www.nachoaveragedadjoke.com/](https://www.nachoaveragedadjoke.com/)
 
+The backend API that serves the jokes lives in a separate repo:
+[MattVolkin/dadjoke-backend](https://github.com/MattVolkin/dadjoke-backend).
+
 ## Features
 
 - Fetch a random joke from the API with one click.
@@ -27,7 +30,8 @@ Dad Joke Player is a lightweight frontend for browsing, searching, and saving jo
 
 ## How It Works
 
-The frontend expects a backend that exposes joke endpoints. The API base URL is configured in `config.js` as `window.APP_CONFIG.API_BASE_URL`, and the app uses that value to fetch jokes and resolve audio file paths.
+The frontend expects a backend that exposes joke endpoints (see the
+[dadjoke-backend](https://github.com/MattVolkin/dadjoke-backend) repo). The API base URL is configured in `config.js` as `window.APP_CONFIG.API_BASE_URL`, and the app uses that value to fetch jokes and resolve audio file paths.
 
 Current behavior includes:
 

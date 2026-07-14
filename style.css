@@ -28,7 +28,7 @@
   --header-padding: 1.1rem 2.5rem;
   --title-size: clamp(1.5rem, 4vw, 2.2rem);
   --search-height: 48px;
-  --search-width: 300px;
+  --search-width: 340px;
   --main-padding: 1.75rem;
   --border-radius: 20px;
   --button-padding: 0.8rem 1.8rem;
@@ -183,7 +183,6 @@ header {
 
 /* --- MAIN CONTENT --- */
 main {
-  flex: 1;
   width: 100%;
   max-width: 800px;
   margin: var(--space-4) auto;
@@ -450,16 +449,26 @@ button:focus-visible {
 .favorite-item .favorite-item-text {
   color: var(--text);
   line-height: 1.45;
+  /* Clamp long jokes so cards stay a consistent height; the full text still
+     loads in the main display when the row is clicked. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* --- FOOTER --- */
 footer {
   text-align: center;
   padding: var(--space-3);
-  margin-top: var(--space-4);
-  color: var(--muted);
+  /* Pin the footer to the bottom on short pages without stretching the
+     content card (body is a flex column). */
+  margin-top: auto;
+  background: var(--ink);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.9rem;
-  border-top: 1px solid var(--shadow-light);
+  border-top: 3px solid var(--gold);
 }
 
 footer p {
@@ -467,7 +476,7 @@ footer p {
 }
 
 footer a {
-  color: var(--gold-strong);
+  color: var(--gold);
   font-weight: 600;
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -478,7 +487,7 @@ footer a {
 
 footer a:hover,
 footer a:focus-visible {
-  color: var(--text);
+  color: #fff;
   border-bottom-color: var(--gold);
   outline: none;
 }
@@ -511,6 +520,10 @@ footer a:focus-visible {
 
   .site-title {
     grid-area: title;
+    /* The longer brand name may not fit on one line on phones. */
+    white-space: normal;
+    text-wrap: balance;
+    line-height: 1.15;
   }
 
   #search-form {

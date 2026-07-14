@@ -42,15 +42,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // A real <button> is focusable and activatable by keyboard (Enter/Space)
-  // out of the box, so no manual tabindex/keydown handling is needed.
-  function createHeart(joke) {
+  // out of the box, so no manual tabindex/keydown handling is needed. In the
+  // sidebar every heart is already a saved favorite, so its only action is
+  // removal — label it accordingly for screen readers and hover tooltips.
+  function createHeart(joke, context) {
     const key = jokeKey(joke);
     const heart = document.createElement('button');
     heart.type = 'button';
     heart.textContent = '♥';
     heart.className = 'joke-heart';
     heart.dataset.jokeKey = key;
-    heart.setAttribute('aria-label', 'Toggle favorite');
+    const label = context === 'sidebar' ? 'Remove from favorites' : 'Toggle favorite';
+    heart.setAttribute('aria-label', label);
+    heart.title = label;
     applyFavoritedState(heart, isJokeFavorited(joke));
     heart.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -114,7 +118,7 @@ window.addEventListener('DOMContentLoaded', () => {
       textEl.addEventListener('click', () => displayJoke(joke));
 
       item.appendChild(textEl);
-      item.appendChild(createHeart(joke));
+      item.appendChild(createHeart(joke, 'sidebar'));
       favoritesSidebarList.appendChild(item);
     });
   }
