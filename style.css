@@ -8,6 +8,8 @@
 :root {
   --gold: #ffc857;
   --gold-strong: #e9ad33;
+  --coral: #ff7a59;
+  --sky: #4d9de0;
   --ink: #222; /* fixed dark used by the always-dark header/sidebar chrome */
 
   --bg: #fbf9f4;
@@ -57,7 +59,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top left, rgba(255, 200, 87, 0.16), transparent 32%),
+    radial-gradient(circle at top right, rgba(77, 157, 224, 0.12), transparent 28%),
+    linear-gradient(180deg, #fffaf0 0%, var(--bg) 42%, #eef4ff 100%);
   color: var(--text);
   min-height: 100vh;
   display: flex;
@@ -93,28 +98,31 @@ header {
 }
 
 /* --- INTERACTIVE ELEMENTS --- */
-/* The Favorites toggle mirrors the Search button: a solid gold pill with ink
-   text that inverts to ink/gold on hover, for a consistent header. */
+/* The Favorites toggle is a solid gold pill matching the other primary buttons
+   (Get Random Joke / Clear Search), with the heart icon inline. It inverts to
+   ink/gold on hover like the rest. */
 .favorites-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  grid-area: menu;
-  justify-self: start;
   flex-shrink: 0;
   background: var(--gold);
   color: var(--ink);
   border: none;
   cursor: pointer;
-  padding: 0.55rem 1.2rem;
+  padding: 0.65rem 1.15rem;
   border-radius: 999px;
   font-size: var(--button-size);
   font-weight: 600;
   font-family: inherit;
   line-height: 1;
+  box-shadow: var(--elev-1);
   transition:
     background 0.2s,
-    color 0.2s;
+    color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .favorites-btn__icon {
@@ -127,7 +135,9 @@ header {
 .favorites-btn:focus-visible {
   background: var(--ink);
   color: var(--gold);
+  box-shadow: var(--elev-2);
   outline: none;
+  transform: translateY(-1px);
 }
 
 #close-sidebar {
@@ -202,7 +212,7 @@ header {
 }
 
 #search-form button {
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold) 0%, #ffd97c 55%, #ffbf5c 100%);
   color: var(--ink);
   border: none;
   padding: 0 1.3rem;
@@ -216,12 +226,14 @@ header {
   flex-shrink: 0;
   transition:
     background 0.2s,
-    color 0.2s;
+    color 0.2s,
+    transform 0.2s;
 }
 
 #search-form button:hover {
   background: var(--ink);
   color: var(--gold);
+  transform: translateY(-1px);
 }
 
 /* --- MAIN CONTENT --- */
@@ -322,6 +334,20 @@ button:disabled:hover {
   color: var(--ink);
 }
 
+/* Action rows that pair the Favorites button with the section's primary action. */
+.joke-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.joke-actions button {
+  margin: 0;
+}
+
 /* --- SEARCH SECTION --- */
 #search-section {
   display: none;
@@ -332,20 +358,39 @@ button:disabled:hover {
   justify-content: space-between;
   align-items: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.search-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.search-actions .favorites-btn {
+  /* Match the compact Clear Search control in this row. */
+  padding: 0.58rem 1rem;
+  box-shadow: var(--elev-1);
 }
 
 #clear-search-btn {
-  background: var(--ink);
-  color: var(--gold);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  background: linear-gradient(135deg, var(--coral) 0%, #ff9f5a 52%, var(--gold) 100%);
+  color: var(--ink);
+  padding: 0.58rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 34, 34, 0.1);
   margin: 0;
+  box-shadow: var(--elev-1);
 }
 
 #clear-search-btn:hover {
-  background: var(--gold);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--ink) 0%, #3d4f8f 100%);
+  color: var(--gold);
 }
 
 #show-more-btn {
@@ -555,14 +600,9 @@ footer a:focus-visible {
   .header-content {
     grid-template-columns: 1fr;
     grid-template-areas:
-      'menu'
       'title'
       'search';
     row-gap: 0.75rem;
-  }
-
-  .favorites-btn {
-    grid-area: menu;
   }
 
   .site-title {
@@ -652,7 +692,7 @@ footer a:focus-visible {
   }
 
   /* Drawer-only controls have no purpose when the panel is always visible. */
-  #favorites-toggle,
+  .favorites-btn,
   #close-sidebar {
     display: none;
   }
