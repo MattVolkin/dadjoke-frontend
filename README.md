@@ -4,7 +4,7 @@ Nacho Average Dad Jokes is a lightweight frontend for browsing, searching, and s
 
 ## Project URL
 
-[https://www.nachoaveragedadjoke.com/](https://www.nachoaveragedadjoke.com/)
+URL:[https://www.nachoaveragedadjoke.com/](https://www.nachoaveragedadjoke.com/)
 
 The backend API that serves the jokes lives in a separate repo:
 [MattVolkin/dadjoke-backend](https://github.com/MattVolkin/dadjoke-backend).
